@@ -188,3 +188,9 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_200_OK)
         data = resp.get_json()
         self.assertEqual(len(data), 1)
+
+    def test_methods_not_allowed(self):
+        """It should not allow an illegal method call"""
+        resp = self.client.put(BASE_URL)
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
