@@ -61,9 +61,25 @@ def create_accounts():
 # LIST ALL ACCOUNTS
 ######################################################################
 
-# ... place you code here to LIST accounts ...
+@app.route("/accounts", methods=["GET"])
+def list_accounts():
+    """
+    List Accounts
+    This endpoint will list all Accounts or, if query string is not empty, all accounts that match it
+    """
 
+    if not request.args:
+        app.logger.info("Request to list all Accounts")
+        accounts = Account.all()
+    else:
+        app.logger.info("Request to list all Accounts matching: %s", request.args.to_dict()['name'])
+        accounts = Account.find_by_name(request.args.to_dict()['name'])
 
+    account_list = [account.serialize() for account in accounts]
+    app.logger.info("Returning [%s] accounts", len(account_list))
+    return jsonify(account_list), status.HTTP_200_OK
+    
+    
 ######################################################################
 # READ AN ACCOUNT
 ######################################################################
